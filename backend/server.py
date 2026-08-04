@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 
+import re
 import os
 import io
 import json
@@ -224,14 +225,14 @@ Return:
     except Exception as e:
         print("ATS JSON Error:", e)
 
-        return {{
+        return {
             "ats_score": 0,
             "summary": "Failed to analyze resume.",
             "strengths": [],
             "missing_skills": [],
             "resume_improvements": [],
             "keyword_suggestions": []
-        }}
+        }
 
 # ================== RESUME ROUTE ==================
 @api_router.post("/resume/analyze")
