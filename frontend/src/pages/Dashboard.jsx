@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Sidebar from "../components/Sidebar";
@@ -17,7 +17,7 @@ export default function Dashboard() {
   const [user] = useState(getUser() || null);
   const [chatKey, setChatKey] = useState(Date.now());
 
-  const loadSessions = async () => {
+  const loadSessions = useCallback(async () => {
     try {
       const { data } = await api.get("/chat/sessions");
       setSessions(data);
@@ -29,11 +29,11 @@ export default function Dashboard() {
         console.error("Failed to load sessions");
       }
     }
-  };
+  }, [navigate]);
 
   useEffect(() => {
-    loadSessions();
-  }, []);
+  loadSessions();
+}, [loadSessions]);
 
   const onLogout = () => {
     clearAuth();
@@ -42,7 +42,6 @@ export default function Dashboard() {
 
   return (
     <div className="flex h-screen bg-black text-[#F9F9F9]">
-
       <Sidebar
         sessions={sessions}
         activeSession={activeSession}
@@ -63,7 +62,6 @@ export default function Dashboard() {
       />
 
       <main className="flex-1 overflow-hidden flex flex-col">
-
         {tab === "chat" && (
           <ChatPanel
             key={chatKey}
@@ -78,7 +76,6 @@ export default function Dashboard() {
 
         {tab === "resume" && <ResumeAnalyzer />}
         {tab === "jobs" && <JobsPanel />}
-
       </main>
     </div>
   );
