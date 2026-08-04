@@ -1,3 +1,4 @@
+//Jobs Panel
 import { useState } from "react";
 import {
   Search,
@@ -76,7 +77,7 @@ export default function JobsPanel() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="h-full overflow-y-auto">
       <div className="max-w-6xl mx-auto px-6 py-12">
 
         <h1 className="text-4xl font-semibold">
