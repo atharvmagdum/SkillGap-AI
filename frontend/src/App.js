@@ -14,7 +14,7 @@ function PrivateRoute({ children }) {
 
 function App() {
   return (
-    <div className="min-h-screen bg-[#F5F5F2] text-white">
+    <div className="h-screen bg-black text-white overflow-hidden">
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
