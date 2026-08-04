@@ -45,7 +45,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="relative flex h-screen bg-black text-[#F9F9F9] overflow-hidden">
+    <div className="relative flex h-screen bg-black text-[#F9F9F9]">
 
       {/* Mobile Overlay */}
       {sidebarOpen && (
@@ -83,10 +83,10 @@ export default function Dashboard() {
       />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col min-h-0">
 
         {/* Mobile Header */}
-        <div className="md:hidden h-16 border-b border-white/10 flex items-center px-4">
+        <div className="md:hidden h-16 border-b border-white/10 flex items-center px-4 shrink-0">
 
           <button
             onClick={() => setSidebarOpen(true)}
@@ -102,7 +102,7 @@ export default function Dashboard() {
         </div>
 
         {/* Pages */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 min-h-0">
 
           {tab === "chat" && (
             <ChatPanel
@@ -116,8 +116,13 @@ export default function Dashboard() {
             />
           )}
 
-          {tab === "resume" && <ResumeAnalyzer />}
-          {tab === "jobs" && <JobsPanel />}
+          {tab === "resume" && (
+            <ResumeAnalyzer />
+          )}
+
+          {tab === "jobs" && (
+            <JobsPanel />
+          )}
 
         </div>
 
