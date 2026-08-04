@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { Menu } from "lucide-react";
 
 import Sidebar from "../components/Sidebar";
 import ChatPanel from "../components/ChatPanel";
@@ -17,6 +18,9 @@ export default function Dashboard() {
   const [user] = useState(getUser() || null);
   const [chatKey, setChatKey] = useState(Date.now());
 
+  // Mobile sidebar
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const loadSessions = useCallback(async () => {
     try {
       const { data } = await api.get("/chat/sessions");
@@ -32,8 +36,8 @@ export default function Dashboard() {
   }, [navigate]);
 
   useEffect(() => {
-  loadSessions();
-}, [loadSessions]);
+    loadSessions();
+  }, [loadSessions]);
 
   const onLogout = () => {
     clearAuth();
@@ -41,42 +45,84 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-black text-[#F9F9F9]">
+    <div className="relative flex h-screen bg-black text-[#F9F9F9] overflow-hidden">
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 z-40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
       <Sidebar
+        open={sidebarOpen}
+        setOpen={setSidebarOpen}
         sessions={sessions}
         activeSession={activeSession}
         onPick={(id) => {
           setActiveSession(id);
           setTab("chat");
+          setSidebarOpen(false);
         }}
         onNew={() => {
           setActiveSession(null);
           setTab("chat");
           setChatKey(Date.now());
+          setSidebarOpen(false);
         }}
-        onTab={setTab}
+        onTab={(value) => {
+          setTab(value);
+          setSidebarOpen(false);
+        }}
         currentTab={tab}
         user={user}
         onLogout={onLogout}
         onRefresh={loadSessions}
       />
 
-      <main className="flex-1 overflow-hidden flex flex-col">
-        {tab === "chat" && (
-          <ChatPanel
-            key={chatKey}
-            sessionId={activeSession}
-            onSessionCreated={(id) => {
-              setActiveSession(id);
-              loadSessions();
-            }}
-            onMessageSent={loadSessions}
-          />
-        )}
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col overflow-hidden">
 
-        {tab === "resume" && <ResumeAnalyzer />}
-        {tab === "jobs" && <JobsPanel />}
+        {/* Mobile Header */}
+        <div className="md:hidden h-16 border-b border-white/10 flex items-center px-4">
+
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="mr-4"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+
+          <h1 className="font-semibold text-lg">
+            SkillGap-AI
+          </h1>
+
+        </div>
+
+        {/* Pages */}
+        <div className="flex-1 overflow-hidden">
+
+          {tab === "chat" && (
+            <ChatPanel
+              key={chatKey}
+              sessionId={activeSession}
+              onSessionCreated={(id) => {
+                setActiveSession(id);
+                loadSessions();
+              }}
+              onMessageSent={loadSessions}
+            />
+          )}
+
+          {tab === "resume" && <ResumeAnalyzer />}
+          {tab === "jobs" && <JobsPanel />}
+
+        </div>
+
       </main>
+
     </div>
   );
 }
