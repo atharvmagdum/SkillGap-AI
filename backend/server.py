@@ -208,7 +208,7 @@ Return:
 """
 
     response = client_ai.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-20b",
         temperature=0.3,
         messages=[
             {
@@ -290,7 +290,7 @@ async def chat(req: ChatMessageRequest, user=Depends(get_current_user)):
     session_id = req.session_id or str(uuid.uuid4())
 
     response = client_ai.chat.completions.create(
-        model="llama-3.1-8b-instant",
+        model="openai/gpt-oss-20b",
         messages=[
             {
                 "role": "system",
