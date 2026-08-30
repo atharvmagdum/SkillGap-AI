@@ -1,5 +1,6 @@
 # Server.py
 from fastapi import FastAPI, APIRouter, Depends, HTTPException, UploadFile, File, Form
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -41,10 +42,24 @@ if not all([
 ]):
     raise RuntimeError("Missing environment variables")
 
+
+origins = [
+    "https://skillgap-ai-main-gamma.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:5173",
+]
+
 # ================== APP ==================
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ================== DB ==================
 client = AsyncIOMotorClient(MONGO_URL)
